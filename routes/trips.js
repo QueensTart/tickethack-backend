@@ -14,14 +14,21 @@ router.get("/:departure/:arrival/:date", (req, res) => {
     
     Trip.find({departure : req.params.departure, arrival : req.params.arrival})
     .then((data) => { 
-        for(let i = 0; i < 10; i++)
+        if(data != [])
         {
-            if(data[i].date.getDate() === newDate.getDate() && data[i].date.getMonth() === newDate.getMonth())
+            for(let i = 0; i < data.length; i++)
             {
-                tripList.push(data[i]);
+                if(data[i].date.getDate() === newDate.getDate() && data[i].date.getMonth() === newDate.getMonth())
+                {
+                    tripList.push(data[i]);
+                }
             }
+            res.json({ trips : tripList})
         }
-        res.json({ trips : tripList})
+        else{
+            res.json({ trips : []});
+        }
+        
        })
     //.then(data => res.json({ trip : data }));
 })

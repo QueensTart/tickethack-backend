@@ -1,6 +1,5 @@
 var express = require("express");
 var router = express.Router();
-const dayjs = require("dayjs");
 
 const Trip = require("../models/trips");
 
@@ -9,17 +8,12 @@ const Trip = require("../models/trips");
 //         .then(data => res.json({ trips : data}));
 // })
 
-router.get("/", (req, res) => {
-    Trip.find({departure : req.body.departure, arrival : req.body.arrival, date : req.body.date})  
-    .then(data => res.json({ trip : data }));
-})
-
-router.get("/:date", (req, res) => {
+router.get("/:departure/:arrival/:date", (req, res) => {
     const newDate = new Date(req.params.date);
     const tripList = [];
-
-    Trip.find({})
-       .then((data) => { 
+    
+    Trip.find({departure : req.params.departure, arrival : req.params.arrival})
+    .then((data) => { 
         for(let i = 0; i < 10; i++)
         {
             if(data[i].date.getDate() === newDate.getDate() && data[i].date.getMonth() === newDate.getMonth())
@@ -28,7 +22,8 @@ router.get("/:date", (req, res) => {
             }
         }
         res.json({ trips : tripList})
-       })   
+       })
+    //.then(data => res.json({ trip : data }));
 })
 
 
